@@ -1,24 +1,37 @@
-# 🎨 Theme Customizer Platform
+# Theme Customizer Frontend
 
-Plataforma web de personalización de temas (colores y tipografía) con visualización en tiempo real.
+Frontend en React + Vite para personalizacion de temas con autenticacion.
 
-## 📋 Características
+## Requisitos
 
-- ✅ Preview en tiempo real
-- ✅ Regla 60-30-10 para colores
-- ✅ Validación de accesibilidad (WCAG)
-- ✅ Undo/Revertir acciones
-- ✅ LocalStorage para persistencia local
-- ✅ Auth con JWT
-- ✅ Roles Admin/Cliente
-- ✅ Upload de fuentes .ttf
+- Node.js 18+
+- Backend corriendo en http://localhost:4000
 
-## 🚀 Instalación
+## Configuracion
 
-### Backend
+1. Crear archivo de entorno:
+
 ```bash
-cd backend
-npm install
 cp .env.example .env
-# Editar .env con tus credenciales
+```
+
+2. Instalar dependencias:
+
+```bash
+npm install
+```
+
+3. Ejecutar en desarrollo:
+
+```bash
 npm run dev
+```
+
+## Flujo de autenticacion
+
+- Registro: /register
+- Login: /login
+- Dashboard: /dashboard (protegido)
+- Admin: /admin (solo rol admin)
+
+La sesion usa cookie HttpOnly para refresh token y access token en memoria de la app.
