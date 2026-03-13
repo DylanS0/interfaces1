@@ -105,6 +105,11 @@ function themeReducer(state, action) {
         ...state,
         customFonts: [...state.customFonts, action.payload]
       };
+    case 'REMOVE_CUSTOM_FONT':
+      return {
+        ...state,
+        customFonts: state.customFonts.filter(font => font.id !== action.payload)
+      };
     case 'LOAD_PALETTE':
       return {
         ...state,
@@ -185,6 +190,11 @@ export function ThemeProvider({ children }) {
     dispatch({ type: 'ADD_CUSTOM_FONT', payload: fontData });
   };
 
+  const removeCustomFont = (fontId) => {
+    addToHistory(state);
+    dispatch({ type: 'REMOVE_CUSTOM_FONT', payload: fontId });
+  };
+
   const loadPalette = (palette) => {
     addToHistory(state);
     dispatch({ type: 'LOAD_PALETTE', payload: palette });
@@ -226,6 +236,7 @@ export function ThemeProvider({ children }) {
       updateColor,
       updateTypography,
       addCustomFont,
+      removeCustomFont,
       loadPalette,
       handleUndo,
       canUndo,
