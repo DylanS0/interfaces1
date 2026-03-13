@@ -3,7 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Toast } from '../common/Toast';
 
 export function FontUploader() {
-  const { state, addCustomFont, updateTypography } = useTheme();
+  const { state, addCustomFont, removeCustomFont, updateTypography } = useTheme();
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
@@ -102,9 +102,21 @@ export function FontUploader() {
           <h4 className="text-sm font-medium text-gray-700 mb-2">Fuentes Cargadas</h4>
           <div className="space-y-2">
             {state.customFonts.map((font) => (
-              <div key={font.id} className="p-3 bg-gray-50 rounded-lg flex items-center justify-between">
-                <span className="text-sm font-medium" style={{ fontFamily: font.name }}>{font.name}</span>
-                <span className="text-xs text-gray-500">{font.uploadedAt}</span>
+              <div key={font.id} className="p-3 bg-gray-50 rounded-lg flex items-center justify-between gap-4">
+                <div>
+                  <div className="text-sm font-medium" style={{ fontFamily: font.name }}>{font.name}</div>
+                  <div className="text-xs text-gray-500">{font.uploadedAt}</div>
+                </div>
+                <button
+                  onClick={() => {
+                    if (window.confirm(`¿Eliminar la fuente "${font.name}"?`)) {
+                      removeCustomFont(font.id);
+                    }
+                  }}
+                  className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                  Eliminar
+                </button>
               </div>
             ))}
           </div>

@@ -60,7 +60,7 @@ export function LivePreview() {
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Preview Header */}
       <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-700">👁️ Vista Previa - ShoeStore</h3>
+        <h3 className="font-semibold text-gray-700" style={{ ...pStyle, fontWeight: 600 }}>👁️ Vista Previa - ShoeStore</h3>
         <div className="flex items-center gap-2">
           <span className="text-xs text-green-600 bg-green-100 px-3 py-1 rounded-full flex items-center gap-1">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -127,12 +127,12 @@ export function LivePreview() {
               {/* Texto del Banner */}
               <div className="text-left">
                 <h2 
-                  style={{ ...h1Style, color: state.colors.buttonText, fontSize: '56px', lineHeight: '1.2', marginBottom: '24px' }}
+                  style={{ ...h1Style, color: state.colors.buttonText, lineHeight: '1.2', marginBottom: '24px' }}
                 >
                   Nueva Colección 2026
                 </h2>
                 <p 
-                  style={{ ...pStyle, color: state.colors.buttonText, opacity: 0.95, fontSize: '20px', marginBottom: '32px', maxWidth: '500px' }}
+                  style={{ ...pStyle, color: state.colors.buttonText, opacity: 0.95, marginBottom: '32px', maxWidth: '500px' }}
                 >
                   Descubre los últimos diseños en calzado deportivo y casual. 
                   Comodidad y estilo en cada paso.
@@ -236,8 +236,8 @@ export function LivePreview() {
                   
                   {/* Info */}
                   <div className="p-5">
-                    <h3 style={{ ...h2Style, fontSize: '18px', marginBottom: '8px' }}>{product.name}</h3>
-                    <p style={{ ...pStyle, color: state.colors.accent, fontWeight: '700', fontSize: '22px', marginBottom: '16px' }}>
+                    <h3 style={{ ...h2Style, marginBottom: '8px' }}>{product.name}</h3>
+                    <p style={{ ...pStyle, color: state.colors.accent, fontWeight: '700', marginBottom: '16px' }}>
                       {product.price}
                     </p>
                     <button 
@@ -283,7 +283,7 @@ export function LivePreview() {
                   >
                     {service.icon}
                   </div>
-                  <h3 style={{ ...h2Style, fontSize: '18px', marginBottom: '8px' }}>{service.title}</h3>
+                  <h3 style={{ ...h2Style, marginBottom: '8px' }}>{service.title}</h3>
                   <p style={pStyle}>{service.desc}</p>
                 </div>
               ))}
@@ -301,7 +301,7 @@ export function LivePreview() {
               <div>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-4xl">👟</span>
-                  <h3 style={{ ...h2Style, color: state.colors.background, fontSize: '22px' }}>ShoeStore</h3>
+                  <h3 style={{ ...h2Style, color: state.colors.background }}>ShoeStore</h3>
                 </div>
                 <p style={{ ...pStyle, opacity: 0.8, lineHeight: '1.8' }}>
                   Tu tienda de confianza para calzado deportivo y casual desde 2020. 
@@ -310,7 +310,7 @@ export function LivePreview() {
               </div>
 
               <div>
-                <h4 style={{ ...h2Style, color: state.colors.background, fontSize: '18px', marginBottom: '20px' }}>Enlaces</h4>
+                <h4 style={{ ...h2Style, color: state.colors.background, marginBottom: '20px' }}>Enlaces</h4>
                 <ul className="space-y-3">
                   {['Sobre Nosotros', 'Catálogo', 'Blog', 'Contacto'].map((item) => (
                     <li key={item}>
@@ -328,7 +328,7 @@ export function LivePreview() {
               </div>
 
               <div>
-                <h4 style={{ ...h2Style, color: state.colors.background, fontSize: '18px', marginBottom: '20px' }}>Ayuda</h4>
+                <h4 style={{ ...h2Style, color: state.colors.background, marginBottom: '20px' }}>Ayuda</h4>
                 <ul className="space-y-3">
                   {['Envíos', 'Devoluciones', 'Tallas', 'FAQ'].map((item) => (
                     <li key={item}>
@@ -345,7 +345,7 @@ export function LivePreview() {
               </div>
 
               <div>
-                <h4 style={{ ...h2Style, color: state.colors.background, fontSize: '18px', marginBottom: '20px' }}>Contacto</h4>
+                <h4 style={{ ...h2Style, color: state.colors.background, marginBottom: '20px' }}>Contacto</h4>
                 <ul className="space-y-3">
                   <li style={{ ...pStyle, opacity: 0.8 }}>📍 Av. Principal 123, Ciudad</li>
                   <li style={{ ...pStyle, opacity: 0.8 }}>📞 +1 234 567 890</li>
@@ -356,7 +356,7 @@ export function LivePreview() {
             </div>
 
             <div className="mt-12 pt-8 border-t" style={{ borderColor: `${state.colors.background}20` }}>
-              <p style={{ ...pStyle, opacity: 0.7, fontSize: '14px', textAlign: 'center' }}>
+              <p style={{ ...pStyle, opacity: 0.7, textAlign: 'center' }}>
                 © 2026 ShoeStore. Todos los derechos reservados.
               </p>
             </div>
