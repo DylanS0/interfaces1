@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura Fiscal - Zapatería Online</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e67e22;
+            --border-color: #bdc3c7;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .invoice-container {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-top: 5px solid var(--accent-color);
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+        }
+
+        .company-info h1 {
+            margin: 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 24px;
+        }
+
+        .company-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .invoice-details {
+            text-align: right;
+        }
+
+        .invoice-details h2 {
+            margin: 0;
+            color: var(--accent-color);
+            font-size: 28px;
+        }
+
+        /* CLIENTE INFO */
+        .client-section {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .client-box, .billing-box {
+            width: 48%;
+        }
+
+        .client-box h3, .billing-box h3 {
+            font-size: 14px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        /* TABLA */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        /* TOTALES */
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .totals-table {
+            width: 350px;
+        }
+
+        .totals-table td {
+            padding: 5px 10px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            font-size: 16px;
+            border-top: 2px solid var(--primary-color);
+        }
+
+        /* EQUIVALENCIA BOLÍVARES */
+        .bs-equivalence {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        /* FOOTER LEGAL */
+        .footer {
+            margin-top: 40px;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .legal-warning {
+            font-weight: bold;
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+
+        .legal-norm {
+            font-style: italic;
+            margin: 5px 0;
+        }
+
+        .digital-printer-info {
+            background-color: #f0f0f0;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .qr-section img {
+            width: 80px;
+            height: 80px;
+        }
+
+        /* BOTONES DE ACCIÓN (No se imprimen) */
+        .actions {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn:hover { background-color: #34495e; }
+
+        /* ESTILOS DE IMPRESIÓN */
+        @media print {
+            body { 
+                background: white; 
+                padding: 0;
+                -webkit-print-color-adjust: exact; 
+            }
+            .invoice-container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+            .actions { display: none; }
+            input { border: none; background: transparent; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="actions">
+        <button class="btn" onclick="window.print()">🖨️ Imprimir Factura</button>
+        <button class="btn" onclick="downloadPDF()">📥 Descargar PDF</button>
+    </div>
+
+    <div class="invoice-container">
+        <!-- Encabezado -->
+        <header class="header">
+            <div class="company-info">
+                <h1>Zapatos "El Paso" C.A.</h1>
+                <p><strong>RIF:</strong> J-12345678-9</p>
+                <p><strong>Dirección Fiscal:</strong> Av. Principal de Chacao, Edif. Centro, PB. Local 4.<br>Caracas, Distrito Capital, Venezuela.</p>
+                <p><strong>Teléfono:</strong> (0212) 555-0123 | <strong>Email:</strong> facturacion@elpaso.com</p>
+                <p><strong>Actividad Económica:</strong> Comercio al por menor de calzado</p>
+            </div>
+            <div class="invoice-details">
+                <h2>FACTURA</h2>
+                <p><strong>N° Factura:</strong> <input type="text" value="000124" style="width: 60px; text-align: right;" readonly></p>
+                <p><strong>N° Control:</strong> <input type="text" value="00-000567" style="width: 80px; text-align: right;" readonly></p>
+                <p><strong>Fecha de Emisión:</strong> <span id="currentDate"></span></p>
+                <p><strong>Hora:</strong> <span id="currentTime"></span></p>
+            </div>
+        </header>
+
+        <!-- Datos del Cliente -->
+        <section class="client-section">
+            <div class="client-box">
+                <h3>Datos del Cliente</h3>
+                <p><strong>Nombre/Razón Social:</strong> Juan Pérez</p>
+                <p><strong>RIF/C.I:</strong> V-12.345.678</p>
+                <p><strong>Dirección:</strong> Urb. Los Caobos, Calle 5, Casa 12.<br>Caracas, Distrito Capital</p>
+                <p><strong>Teléfono:</strong> (0412) 555-9876</p>
+                <p><strong>Email:</strong> juan.perez@email.com</p>
+            </div>
+            <div class="billing-box">
+                <h3>Condiciones de Pago</h3>
+                <p><strong>Método:</strong> Pago Móvil / Transferencia</p>
+                <p><strong>Referencia:</strong> 1234567890</p>
+                <p><strong>Banco:</strong> Banesco</p>
+                <p><strong>Moneda:</strong> USD (Dólares Americanos)</p>
+                <p><strong>Tasa BCV:</strong> <span id="tasaBCV"></span> Bs/USD</p>
+            </div>
+        </section>
+
+        <!-- Tabla de Productos -->
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">Cant.</th>
+                    <th style="width: 10%;">Cód.</th>
+                    <th style="width: 50%;">Descripción</th>
+                    <th class="text-right" style="width: 15%;">Precio Unit.</th>
+                    <th class="text-right" style="width: 20%;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="itemsTable">
+                <!-- Fila 1 -->
+                <tr>
+                    <td class="text-center">1</td>
+                    <td>ZAP-001</td>
+                    <td>Botas de Cuero Genuino - Talla 40 (Color Café)</td>
+                    <td class="text-right">$ 45.00</td>
+                    <td class="text-right item-total">$ 45.00</td>
+                </tr>
+                <!-- Fila 2 -->
+                <tr>
+                    <td class="text-center">2</td>
+                    <td>CAL-055</td>
+                    <td>Calcetines Deportivos Pack x3</td>
+                    <td class="text-right">$ 5.00</td>
+                    <td class="text-right item-total">$ 10.00</td>
+                </tr>
+                <!-- Fila 3 -->
+                <tr>
+                    <td class="text-center">1</td>
+                    <td>LIM-102</td>
+                    <td>Kit de Limpieza para Zapatos</td>
+                    <td class="text-right">$ 8.50</td>
+                    <td class="text-right item-total">$ 8.50</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Totales -->
+        <section class="totals-section">
+            <table class="totals-table">
+                <tr>
+                    <td class="text-right"><strong>Subtotal (Base Imponible):</strong></td>
+                    <td class="text-right" id="subtotal">$ 63.50</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Descuentos:</strong></td>
+                    <td class="text-right" id="descuentos">$ 0.00</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Base Imponible IVA:</strong></td>
+                    <td class="text-right" id="baseImponible">$ 63.50</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>IVA (16%):</strong></td>
+                    <td class="text-right" id="iva">$ 10.16</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>IGTF (3%):</strong> <small style="font-weight: normal; color: #666;">(Art. 4 Ley IGTF - Pago en divisas)</small></td>
+                    <td class="text-right" id="igtf">$ 1.91</td>
+                </tr>
+                <tr class="total-row">
+                    <td class="text-right">TOTAL A PAGAR:</td>
+                    <td class="text-right" id="totalFinal">$ 75.57</td>
+                </tr>
+                <tr>
+                    <td class="text-right"><strong>Total en Bolívares:</strong></td>
+                    <td class="text-right" id="totalBs">Bs. 0.00</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Equivalencia en Bolívares -->
+        <div class="bs-equivalence">
+            <strong>Equivalencia en Bolívares:</strong> Según tasa oficial del Banco Central de Venezuela (BCV) publicada para la fecha de emisión. 
+            <br>Montos expresados en USD con equivalencia en Bs. para fines de registro fiscal (Art. 5 Providencia SNAT/2022/0013).
+        </div>
+
+        <!-- Información de Imprenta Digital -->
+        <div class="digital-printer-info">
+            <strong>Datos de la Imprenta Digital Autorizada:</strong><br>
+            <strong>Nombre:</strong> Zapatos "El Paso" C.A. | <strong>RIF:</strong> J-98765432-1<br>
+            <strong>N° Autorización SENIAT:</strong> 2024-0001-000567 | <strong>Fecha de Asignación:</strong> <span id="controlDate"></span><br>
+            <strong>Números de Control Asignados:</strong> Del 00-000001 al 00-001000
+        </div>
+
+        <!-- Código QR para validación -->
+        <div class="qr-section">
+            <p><strong>Validación de Factura:</strong> Escanee el código QR o visite nuestro portal para verificar la autenticidad de este documento</p>
+            <div style="background: #f0f0f0; width: 80px; height: 80px; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 1px solid #ccc;">
+                <span style="font-size: 10px;">QR CODE</span>
+            </div>
+        </div>
+
+        <!-- Pie de página legal -->
+        <footer class="footer">
+            <p class="legal-warning">⚠️ NOTA: Este documento no válido como comprobante fiscal si no está firmado y sellado por el proveedor.</p>
+            
+            <p class="legal-norm"><strong>Artículo 101 del Código Orgánico Tributario:</strong> Los contribuyentes deberán emitir facturas o documentos equivalentes por las operaciones que realicen.</p>
+            
+            <p class="legal-norm"><strong>Providencia Administrativa SNAT/2024/000102:</strong> Esta factura se emite conforme a lo establecido en la Gaceta Oficial N° 43.032 del 19 de diciembre de 2024, que regula la utilización de medios digitales para la emisión de facturas y otros documentos fiscales.</p>
+            
+            <p class="legal-norm"><strong>Providencia Administrativa SNAT/2011/00071:</strong> Cumple con los requisitos de identificación del emisor y receptor, numeración consecutiva, y datos de la imprenta autorizada.</p>
+            
+            <p class="legal-norm"><strong>Art. 5 Providencia SNAT/2022/0013 (IGTF):</strong> Se aplica el 3% de Impuesto a las Grandes Transacciones Financieras por pago en moneda extranjera.</p>
+            
+            <p class="legal-norm"><strong>Ley del IVA (Art. 54):</strong> El impuesto desglosado es acreditable para los contribuyentes ordinarios.</p>
+            
+            <p style="margin-top: 15px;">
+                <strong>Fecha de Generación:</strong> <span id="printDate"></span> | 
+                <strong>Sistema de Facturación Homologado SENIAT:</strong> v2.0 | 
+                <strong>Código de Seguridad:</strong> <span id="securityCode"></span>
+            </p>
+            
+            <p style="margin-top: 10px; font-size: 9px;">
+                Esta factura debe ser conservada por el comprador por un período mínimo de 5 años conforme al Art. 120 del Código Orgánico Tributario.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Función para poner la fecha y hora actual
+        function setDate() {
+            const now = new Date();
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            
+            document.getElementById('currentDate').innerText = now.toLocaleDateString('es-VE');
+            document.getElementById('currentTime').innerText = now.toLocaleTimeString('es-VE', timeOptions);
+            document.getElementById('printDate').innerText = now.toLocaleString('es-VE');
+            document.getElementById('controlDate').innerText = now.toLocaleDateString('es-VE');
+            
+            // Generar código de seguridad aleatorio
+            const securityCode = 'SEC-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            document.getElementById('securityCode').innerText = securityCode;
+            
+            // Tasa BCV simulada (en producción vendría de una API)
+            const tasaBCV = 45.50; // Ejemplo
+            document.getElementById('tasaBCV').innerText = tasaBCV.toFixed(2);
+        }
+
+        // Función para formatear moneda (Dólares y Bolívares)
+        const formatCurrencyUSD = (amount) => {
+            return '$ ' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        };
+
+        const formatCurrencyBS = (amount) => {
+            return 'Bs. ' + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        };
+
+        // Cálculo de totales
+        function calculateTotals() {
+            let subtotal = 0;
+            const items = document.querySelectorAll('#itemsTable tr');
+
+            items.forEach(row => {
+                let totalText = row.cells[4].innerText.replace('$', '').replace(',', '');
+                subtotal += parseFloat(totalText);
+            });
+
+            const ivaRate = 0.16; // 16% según Ley del IVA Venezuela
+            const igtfRate = 0.03; // 3% según Ley IGTF
+            const tasaBCV = 45.50; // Tasa del BCV (ejemplo)
+
+            const descuentos = 0;
+            const baseImponible = subtotal - descuentos;
+            const ivaAmount = baseImponible * ivaRate;
+            const igtfAmount = subtotal * igtfRate;
+            const totalUSD = baseImponible + ivaAmount + igtfAmount;
+            const totalBS = totalUSD * tasaBCV;
+
+            // Actualizar el DOM
+            document.getElementById('subtotal').innerText = formatCurrencyUSD(subtotal);
+            document.getElementById('descuentos').innerText = formatCurrencyUSD(descuentos);
+            document.getElementById('baseImponible').innerText = formatCurrencyUSD(baseImponible);
+            document.getElementById('iva').innerText = formatCurrencyUSD(ivaAmount);
+            document.getElementById('igtf').innerText = formatCurrencyUSD(igtfAmount);
+            document.getElementById('totalFinal').innerText = formatCurrencyUSD(totalUSD);
+            document.getElementById('totalBs').innerText = formatCurrencyBS(totalBS);
+        }
+
+        // Función para descargar PDF (simulada)
+        function downloadPDF() {
+            alert('Para descargar en PDF, use la opción de impresión y seleccione "Guardar como PDF"');
+            window.print();
+        }
+
+        // Inicializar
+        setDate();
+        calculateTotals();
+    </script>
+</body>
+</html>
